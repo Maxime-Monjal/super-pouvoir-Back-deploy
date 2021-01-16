@@ -1,10 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const connection = require('./databases/database');
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+const connection = require("./databases/database");
 
-const { SERVER_PORT, CLIENT_URL } = process.env; // (attention!!!)
-
+const { CLIENT_URL } = process.env; // (attention!!!)
+const SERVER_PORT = process.env.SERVER_PORT || 8080;
 const app = express();
 
 app.use(
@@ -15,97 +15,75 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* filter sub-categories */
-
-app.get('/categories/inutile/max-effet', (req, res) => {
-  connection.query(
-    `SELECT * FROM super_pouvoir sp JOIN categorie cat ON sp.categorie_idcategorie = cat.idcategorie WHERE cat.name = "inutile" AND time <= ?`,
-    [req.query.duree],
-      (error, result) => {
-        if (error) {
-          res.status(500).json({ errorMessage: error.message });
-        } else {
-          res.status(201).json({...result});
-        }
-      }
-    );
-  }
-);
-
 /* filter categories */
 
-app.get('/categories/inutile', (req, res) => {
+app.get("/categories/inutile", (req, res) => {
   connection.query(
     `SELECT * FROM super_pouvoir sp JOIN categorie cat ON sp.categorie_idcategorie = cat.idcategorie WHERE cat.name = "inutile"`,
-      (error, result) => {
-        if (error) {
-          res.status(500).json({ errorMessage: error.message });
-        } else {
-          res.status(201).json({...result});
-        }
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ errorMessage: error.message });
+      } else {
+        res.status(201).json({ ...result });
       }
-    );
-  }
-);
+    }
+  );
+});
 
-app.get('/categories/environnemental', (req, res) => {
+app.get("/categories/environnemental", (req, res) => {
   connection.query(
     `SELECT * FROM super_pouvoir sp JOIN categorie cat ON sp.categorie_idcategorie = cat.idcategorie WHERE cat.name = "environnemental"`,
-      (error, result) => {
-        if (error) {
-          res.status(500).json({ errorMessage: error.message });
-        } else {
-          res.status(201).json({...result});
-        }
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ errorMessage: error.message });
+      } else {
+        res.status(201).json({ ...result });
       }
-    );
-  }
-);
+    }
+  );
+});
 
-app.get('/categories/corporel', (req, res) => {
+app.get("/categories/corporel", (req, res) => {
   connection.query(
     `SELECT * FROM super_pouvoir sp JOIN categorie cat ON sp.categorie_idcategorie = cat.idcategorie WHERE cat.name = "corporel"`,
-      (error, result) => {
-        if (error) {
-          res.status(500).json({ errorMessage: error.message });
-        } else {
-          res.status(201).json({...result});
-        }
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ errorMessage: error.message });
+      } else {
+        res.status(201).json({ ...result });
       }
-    );
-  }
-);
+    }
+  );
+});
 
-app.get('/categories/classique', (req, res) => {
+app.get("/categories/classique", (req, res) => {
   connection.query(
     `SELECT * FROM super_pouvoir sp JOIN categorie cat ON sp.categorie_idcategorie = cat.idcategorie WHERE cat.name = "classique"`,
-      (error, result) => {
-        if (error) {
-          res.status(500).json({ errorMessage: error.message });
-        } else {
-          res.status(201).json({...result});
-        }
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ errorMessage: error.message });
+      } else {
+        res.status(201).json({ ...result });
       }
-    );
-  }
-);
+    }
+  );
+});
 
-app.get('/categories/flippant', (req, res) => {
+app.get("/categories/flippant", (req, res) => {
   connection.query(
     `SELECT * FROM super_pouvoir sp JOIN categorie cat ON sp.categorie_idcategorie = cat.idcategorie WHERE cat.name = "flippant"`,
-      (error, result) => {
-        if (error) {
-          res.status(500).json({ errorMessage: error.message });
-        } else {
-          res.status(201).json({...result});
-        }
+    (error, result) => {
+      if (error) {
+        res.status(500).json({ errorMessage: error.message });
+      } else {
+        res.status(201).json({ ...result });
       }
-    );
-  }
-);
+    }
+  );
+});
 
 /* super_power list */
-app.get('/:category', (req, res) => {
+app.get("/:category", (req, res) => {
   connection.query(
     `SELECT * FROM super_pouvoir sp JOIN catégorie cat ON sp.catégorie_idcatégorie = cat.idcatégorie WHERE cat.name = ?`,
     [req.params.category],
@@ -119,8 +97,8 @@ app.get('/:category', (req, res) => {
   );
 });
 
-app.get('/', (request, response) => {
-  connection.query('SELECT * FROM super_pouvoir', (error, result) => {
+app.get("/", (request, response) => {
+  connection.query("SELECT * FROM super_pouvoir", (error, result) => {
     if (error) {
       response.status(500).send(error);
     }
@@ -132,7 +110,7 @@ app.get('/', (request, response) => {
   });
 });
 
-app.get('/power/:id', (req, res) => {
+app.get("/power/:id", (req, res) => {
   connection.query(
     `SELECT * FROM super_pouvoir WHERE idsuper_pouvoir = ?`,
     [req.params.id],
@@ -148,7 +126,7 @@ app.get('/power/:id', (req, res) => {
   );
 });
 
-app.get('/product/:slug', (req, res) => {
+app.get("/product/:slug", (req, res) => {
   connection.query(
     `SELECT * FROM super_pouvoir WHERE slug = ? `,
     [req.params.slug],
@@ -159,26 +137,6 @@ app.get('/product/:slug', (req, res) => {
         res.sendStatus(404);
       } else {
         res.status(200).json(result[0]);
-      }
-    }
-  );
-});
-
-// GET - Ordered data recovery (i.e. ascending, descending)
-// EX : http://localhost:8080/prices/order/ASC ou http://localhost:8080/prices/order/asc
-
-app.get('/prices/order/:value', (req, res) => {
-  let order = 'ASC';
-  if (req.params.value.toLowerCase() === 'desc') {
-    order = 'DESC';
-  }
-  connection.query(
-    `SELECT * FROM super_pouvoir ORDER BY prix ${order}`,
-    (error, result) => {
-      if (error) {
-        res.status(500).send(error);
-      } else {
-        res.status(200).json(result);
       }
     }
   );
