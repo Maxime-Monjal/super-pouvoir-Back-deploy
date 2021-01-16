@@ -143,6 +143,6 @@ app.get("/product/:slug", (req, res) => {
 });
 
 // Don't write anything below this line!
-app.listen(SERVER_PORT, () => {
+app.listen(SERVER_PORT, "0.0.0.0", () => {
   console.log(`Server is running on port ${SERVER_PORT}.`);
 });
