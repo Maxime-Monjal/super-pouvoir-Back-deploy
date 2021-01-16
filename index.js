@@ -7,11 +7,7 @@ const { CLIENT_URL } = process.env; // (attention!!!)
 const SERVER_PORT = process.env.PORT || 8080;
 const app = express();
 
-app.use(
-  cors({
-    origin: CLIENT_URL,
-  })
-);
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
