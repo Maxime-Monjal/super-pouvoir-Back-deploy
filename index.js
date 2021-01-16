@@ -102,7 +102,7 @@ app.get("/", (request, response) => {
     if (error) {
       response.status(500).send(error);
     }
-    if (result.lenght === 0) {
+    if (result.length === 0) {
       response.sendStatus(404);
     } else {
       response.status(200).json(result);
